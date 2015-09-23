@@ -1,19 +1,24 @@
 package Display;
+
 import Game.Game;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by ilnurgazizov on 18.09.15.
  */
 public class Display extends JFrame {
-    public static final int     WIDTH           = 1080;
-    public static final int     HEIGHT          = 810;
+    public static final int WIDTH = 1080;
+    public static final int HEIGHT = 810;
 
-    private static boolean created = false; // Проверка создания окна
+    private boolean created = false; // Проверка создания окна
 
-    private static JFrame window = new JFrame("Sea Battle");;
-    private static JPanel panel = new JPanel();
+    private JFrame window = new JFrame("Sea Battle");
+    ;
+    private JPanel panel = new JPanel();
     public static final int FIELD_SIZE = 10;
 
     // Поля для меню
@@ -36,15 +41,16 @@ public class Display extends JFrame {
 
 
     private char[] numberToLetter = new char[]      // массив для вывода координаты "x" в буквенном кириллическом виде
-     {'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К', 'Л', 'М', 'Н', 'О', 'П',
-            'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Ы', 'Э', 'Ю', 'Я'};
+            {'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К', 'Л', 'М', 'Н', 'О', 'П',
+                    'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Ы', 'Э', 'Ю', 'Я'};
 
-    public Display(Game game){
+    public Display(Game game) {
         create(WIDTH, HEIGHT);
+        initializeOfFields(game);   // инициализируем ячейки
         window.setVisible(true);
     }
 
-    private void create(int width, int height){
+    private void create(int width, int height) {
 
         if (created) return;
 
@@ -64,6 +70,10 @@ public class Display extends JFrame {
 
         userField.setSize(500, 500);
         opponentField.setSize(500, 500);
+        userField.setBackground(Color.darkGray);
+        opponentField.setBackground(Color.GREEN);
+        userField.setLocation(20, 20);
+        opponentField.setLocation(540, 20);
         bothFields.add(userField);
         bothFields.add(opponentField);
         window.add(BorderLayout.CENTER, bothFields);
@@ -76,7 +86,7 @@ public class Display extends JFrame {
 
     }
 
-    private void initializeOfFields() {
+    private void initializeOfFields(Game game) {
         // Угловые неиспользуемые ячейки(кнопки)
         userCells[0][0] = new JButton();
         userCells[0][0].setEnabled(false);
@@ -84,23 +94,44 @@ public class Display extends JFrame {
         opponentCells[0][0].setEnabled(false);
 
         // Объявляем подписи вертикальной оси
-        for (int i = 1; i < FIELD_SIZE; i++) {
-            userCells[0][i] = new JButton(String.valueOf(i));
-            userCells[0][i].setEnabled(false);
-            opponentCells[0][i] = new JButton(String.valueOf(i));
-            opponentCells[0][i].setEnabled(false);
+        for (int y = 1; y < FIELD_SIZE; y++) {
+            userCells[0][y] = new JButton(String.valueOf(y));
+            userCells[0][y].setEnabled(false);
+            opponentCells[0][y] = new JButton(String.valueOf(y));
+            opponentCells[0][y].setEnabled(false);
         }
+
 
         // Объявляем подписи горизонтальной оси
-        for (int i = 1; i <= FIELD_SIZE; i++) {     // подписи горизонтальной оси
-            userCells[i][0] = new JButton(String.valueOf(numberToLetter[i - 1]));
-            userCells[i][0].setEnabled(false);
-            opponentCells[i][0] = new JButton(String.valueOf(numberToLetter[i - 1]));
-            opponentCells[i][0].setEnabled(false);
+        for (int x = 1; x <= FIELD_SIZE; x++) {     // подписи горизонтальной оси
+            userCells[x][0] = new JButton(String.valueOf(numberToLetter[x - 1]));
+            userCells[x][0].setEnabled(false);
+            opponentCells[x][0] = new JButton(String.valueOf(numberToLetter[x - 1]));
+            opponentCells[x][0].setEnabled(false);
         }
 
-        for (int y = 0; y <= FIELD_SIZE; y++) {    // добавляем полученный массив кнопок на
-            for (int x = 0; x <= FIELD_SIZE; x++) { // соответствующие ячейки
+        // Объявляем поле устанавливаем кнопки-ячейки
+        for (int y = 1; y <= FIELD_SIZE; y++) {        // объявляем поле, устанавливая кнопки-ячейки
+            for (int x = 1; x <= FIELD_SIZE; x++) {
+                userCells[x][y] = new JButton();
+                opponentCells[x][y] = new JButton();
+                userCells[x][y].setEnabled(false);   // ячейки игрока не будут нажимаемы
+
+                opponentCells[x][y].addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // нужно будет добавить то что делать при нажатии кнопки
+                        // ------------
+                    }
+                });
+
+                userCells[x][y].setBackground(Color.blue);
+                opponentCells[x][y].setBackground(Color.blue);
+            }
+        }
+        // Тут я вставляю соответствующие ячейки в поля игрока иоппонента
+        for (int x = 0; x <= FIELD_SIZE; x++) { // соответствующие ячейки
+            for (int y = 0; y < FIELD_SIZE; y++) {
                 userField.add(userCells[x][y]);
                 opponentField.add(opponentCells[x][y]);
             }
